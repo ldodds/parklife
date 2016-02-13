@@ -57,9 +57,8 @@ class Parks
   
   def self.tweet(client, park, msg)
     status = "#{msg} ^#{park["handle"]}"
-    puts park
     if !status.nil?
-      #client.update(status) unless status.nil?
+      client.update(status) unless status.nil?
       puts status
     end
   end

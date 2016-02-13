@@ -4,43 +4,43 @@ class Parks
 
   @@PARKS = {
     "RVP" => {
-      "handle" => "RVP",
+      "handle" => "Victoria",
       "name" => "Royal Victoria Park"
     },
     "AVP" => {
-      "handle" => "AVP",
+      "handle" => "Avon",
       "name" => "Avon Park"
     },
     "RP" => {
-      "handle" => "RP",
+      "handle" => "Rose",
       "name" => "Rosewarn Park"
     },
     "HGP" => {
-      "handle" => "HGP",
+      "handle" => "Hedge",
       "name" => "Hedgemead Park"
     },
     "AP" => {
-      "handle" => "AP",
+      "handle" => "Alice",
       "name" => "Alice Park"
     },
     "KM" => {
-      "handle" => "KM",
+      "handle" => "Ken",
       "name" => "Kensington Meadows"
     },
     "SG" => {
-      "handle" => "SG",
+      "handle" => "Sydney",
       "name" => "Sydney Gardens"
     },
     "HP" => {
-      "handle" => "HP",
+      "handle" => "Henrietta",
       "name" => "Henrietta Park"
     },
     "AXP" => {
-      "handle" => "AXP",
+      "handle" => "Alex",
       "name" => "Alexandra Park"
     },
     "SP" => {
-      "handle" => "SP",
+      "handle" => "Spring",
       "name" => "Springfield Park"
     }
   }  
@@ -57,34 +57,33 @@ class Parks
   
   def self.tweet(client, park, msg)
     status = "#{msg} ^#{park["handle"]}"
-    client.update(status)
-    puts status
+    puts park
+    if !status.nil?
+      #client.update(status) unless status.nil?
+      puts status
+    end
   end
   
   def self.facilities
     if @@FACILITIES.empty?
-    CSV.foreach( File.join(File.dirname(__FILE__), "..", "etc", "parks.csv"), {headers: true}) do |row|
-        @@FACILITIES[ row[0] ] = {
-          "outdoor_sports" => row[4],
-          "play_space" => row[5],
-          "bowling_green" => row[7],
-          "footpall_pitch" => row[8],
-          "tennis_court" => row[11],
-          "dog_bins" => row[14],
-          "footpath" => row[15],
-          "floral_display" => row[16],
-          "play_facility" => row[17],
-          "car_park" => row[21]  
-        }
-      end
+      CSV.foreach( File.join(File.dirname(__FILE__), "..", "etc", "parks.csv"), {headers: true}) do |row|
+          @@FACILITIES[ row[0] ] = {
+            "outdoor_sports" => row[4],
+            "play_space" => row[5],
+            "bowling_green" => row[7],
+            "footpall_pitch" => row[8],
+            "tennis_court" => row[11],
+            "dog_bins" => row[14],
+            "footpath" => row[15],
+            "floral_display" => row[16],
+            "play_facility" => row[17],
+            "car_park" => row[21]  
+          }
+        end
     end
     @@FACILITIES
   end
-  
-  def self.facilities_for(handle)
-    facilities[handle]
-  end
-  
+    
   def self.message
     r = rand(0..2)
     case r
@@ -100,7 +99,7 @@ class Parks
   def self.facility
     message_type = @@FACILITY_MESSAGES.keys.sample    
     park = choose
-    while facilities_for(park["handle"])[message_type] == "N"
+    while facilities[ park["handle"] ][message_type] == "N"
       park = choose
     end
     return park, @@FACILITY_MESSAGES[message_type].sample

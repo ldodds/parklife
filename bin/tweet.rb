@@ -11,7 +11,12 @@ client = Twitter::REST::Client.new do |config|
   config.access_token_secret = ENV["TWITTER_AS"]
 end
 
-park, message = Parks.message
+#Choose a park to speak and let it say something
+#will be either facility, a fact, or something random
+Parks.speak(client)
 
-Parks.tweet(client, park, message)
+#non specific, retweet latest tweet about the park with #bath, if they have photos
+Parks.retweet(client)
 
+#non specific, retweet latest tweet of followers if they have photos
+Parks.amplify(client)
